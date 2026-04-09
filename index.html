@@ -34,7 +34,7 @@
             <div class="lg:col-span-7 space-y-4">
                 <div class="card p-6 border border-slate-200">
                     <label class="block text-sm font-bold text-slate-700 mb-3">1. 選擇維護類別 (可多選，點擊按鈕)</label>
-                    <div class="flex flex-wrap gap-2 mb-6" id="catGroup">
+<div class="flex flex-wrap gap-2 mb-6" id="catGroup">
     <input type="checkbox" id="c1" class="cat-checkbox" value="捕鱼游戏"><label for="c1" class="cat-label">捕鱼游戏</label>
     <input type="checkbox" id="c2" class="cat-checkbox" value="棋牌对战"><label for="c2" class="cat-label">棋牌对战</label>
     <input type="checkbox" id="c3" class="cat-checkbox" value="棋牌百人"><label for="c3" class="cat-label">棋牌百人</label>
@@ -44,11 +44,11 @@
     <input type="checkbox" id="c7" class="cat-checkbox" value="电子彩票"><label for="c7" class="cat-label">电子彩票</label>
     <input type="checkbox" id="c8" class="cat-checkbox" value="刮刮乐"><label for="c8" class="cat-label">刮刮乐</label>
     <input type="checkbox" id="c9" class="cat-checkbox" value="区块链"><label for="c9" class="cat-label">区块链</label>
-    <input type="checkbox" id="c9" class="cat-checkbox" value="小游戏"><label for="c10" class="cat-label">小游戏</label>
-    <input type="checkbox" id="c9" class="cat-checkbox" value="SSP棋牌(所有棋牌不分類)"><label for="c11" class="cat-label">SSP棋牌(所有棋牌不分類)</label>
-    <input type="checkbox" id="c10" class="cat-checkbox" value="SSP電子(所有電子不分類)"><label for="c12" class="cat-label">SSP電子(所有電子不分類)</label>
-    <input type="checkbox" id="c11" class="cat-checkbox" value="SSP捕魚(所有捕魚不分類)"><label for="c13" class="cat-label">SSP捕魚(所有捕魚不分類)</label>
-    <input type="checkbox" id="c12" class="cat-checkbox" value="SSP平台(全平台)"><label for="c14" class="cat-label">SSP平台(全平台)</label>
+    <input type="checkbox" id="c10" class="cat-checkbox" value="小游戏"><label for="c10" class="cat-label">小游戏</label>
+    <input type="checkbox" id="c11" class="cat-checkbox" value="SSP棋牌(所有棋牌不分類)"><label for="c11" class="cat-label">SSP棋牌(所有棋牌不分類)</label>
+    <input type="checkbox" id="c12" class="cat-checkbox" value="SSP電子(所有電子不分類)"><label for="c12" class="cat-label">SSP電子(所有電子不分類)</label>
+    <input type="checkbox" id="c13" class="cat-checkbox" value="SSP捕魚(所有捕魚不分類)"><label for="c13" class="cat-label">SSP捕魚(所有捕魚不分類)</label>
+    <input type="checkbox" id="c14" class="cat-checkbox" value="SSP平台(全平台)"><label for="c14" class="cat-label">SSP平台(全平台)</label>
 </div>
                     </div>
 
@@ -110,22 +110,22 @@
     <script>
         const el = id => document.getElementById(id);
 
-        const gameData = {
-            "捕鱼游戏": "捕鱼大咖、渔乐天下、丛林派对、捕鱼财神",
-            "棋牌对战": "二人麻将、单挑牛牛、21点、抢庄牌九、看三张抢庄牛牛、看四张抢庄牛牛、癞子牛牛、三公、对战二八杠、抢庄牛牛、通比牛牛",
-            "棋牌百人": "飞禽走兽、龙虎斗、奔驰宝马、红黑大战、森林舞会、百家乐、百人牛牛、百人骰宝、万人炸金花、万人推筒子",
-            "棋牌街机": "经典水果机、美女水果机、澳6水果机、水果机",
-            "老虎机": "SSP电子",
-            "真人对战": "掼蛋",
-            "电子彩票": "极速澳门六合彩",
-            "刮刮乐": "五福临门、好运十倍、快乐8",
-            "区块链": "修仙渡劫",
-            "小游戏": "一飞冲天",
-            "SSP棋牌(所有棋牌不分類)": "SSP棋牌",
-            "SSP電子(所有電子不分類)": "SSP電子",
-            "SSP捕魚(所有捕魚不分類)": "SSP捕魚",
-            "SSP平台(全平台)": "SSP平台"
-        };
+const gameData = {
+    "捕鱼游戏": "捕鱼大咖、渔乐天下、丛林派对、捕鱼财神",
+    "棋牌对战": "二人麻将、单挑牛牛、21点、抢庄牌九、看三张抢庄牛牛、看四张抢庄牛牛、癞子牛牛、三公、对战二八杠、抢庄牛牛、通比牛牛",
+    "棋牌百人": "飞禽走兽、龙虎斗、奔驰宝马、红黑大战、森林舞会、百家乐、百人牛牛、百人骰宝、万人炸金花、万人推筒子",
+    "街机游戏": "经典水果机、美女水果机、澳6水果机、水果机",
+    "老虎机": "SSP电子",
+    "真人对战": "掼蛋",
+    "电子彩票": "极速澳门六合彩",
+    "刮刮乐": "五福临门、好运十倍、快乐8",
+    "区块链": "修仙渡劫",
+    "小游戏": "一飞冲天",
+    "SSP棋牌(所有棋牌不分類)": "SSP棋牌",
+    "SSP電子(所有電子不分類)": "SSP電子",
+    "SSP捕魚(所有捕魚不分類)": "SSP捕魚",
+    "SSP平台(全平台)": "SSP平台"
+};
 
         // 格式化時間
         function formatDate(dateStr) {
