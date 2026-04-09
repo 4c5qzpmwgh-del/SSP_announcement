@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告生成</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #f1f5f9; font-family: sans-serif; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        /* 隱藏原生 checkbox，用 label 做按鈕樣式 */
+        .cat-checkbox { display: none; }
+        .cat-label { 
+            display: inline-block; padding: 6px 14px; border: 1px solid #e2e8f0; 
+            border-radius: 99px; font-size: 13px; cursor: pointer; transition: all 0.2s;
+            background: #f8fafc; color: #64748b;
+        }
+        .cat-checkbox:checked + .cat-label { 
+            background: #4f46e5; border-color: #4f46e5; color: white; 
+            box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3);
+        }
+        input:disabled { background: #f1f5f9; cursor: not-allowed; opacity: 0.6; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-2xl font-bold text-slate-800 mb-6 flex items-center">
+            <span class="bg-indigo-600 text-white px-3 py-1 rounded-lg mr-2 text-sm">SSP</span> 
+            公告生成
+        </h1>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- 左側控制區 -->
+            <div class="lg:col-span-7 space-y-4">
+                <div class="card p-6 border border-slate-200">
+                    <label class="block text-sm font-bold text-slate-700 mb-3">1. 選擇維護類別 (可多選，點擊按鈕)</label>
+                    <div class="flex flex-wrap gap-2 mb-6" id="catGroup">
+                        <input type="checkbox" id="c1" class="cat-checkbox" value="捕鱼游戏"><label for="c1" class="cat-label">捕鱼游戏</label>
+                        <input type="checkbox" id="c2" class="cat-checkbox" value="棋牌对战"><label for="c2" class="cat-label">棋牌对战</label>
+                        <input type="checkbox" id="c3" class="cat-checkbox" value="棋牌百人"><label for="c3" class="cat-label">棋牌百人</label>
+                        <input type="checkbox" id="c4" class="cat-checkbox" value="街机游戏"><label for="c4" class="cat-label">街机游戏</label>
+                        <input type="checkbox" id="c5" class="cat-checkbox" value="老虎机"><label for="c5" class="cat-label">老虎机</label>
+                        <input type="checkbox" id="c6" class="cat-checkbox" value="真人对战"><label for="c6" class="cat-label">真人对战</label>
+                        <input type="checkbox" id="c7" class="cat-checkbox" value="电子彩票"><label for="c7" class="cat-label">电子彩票</label>
+                        <input type="checkbox" id="c8" class="cat-checkbox" value="刮刮乐"><label for="c8" class="cat-label">刮刮乐</label>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">维护平台</label>
+                            <input type="text" id="platform" class="w-full border rounded p-2 text-sm outline-none focus:border-indigo-500" value="SSP平台">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">公告類型</label>
+                            <select id="noticeType" class="w-full border rounded p-2 text-sm outline-none bg-white">
+                                <option value="例行维护通知">例行维护通知</option>
+                                <option value="临时维护通知">临时维护通知</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">维护游戏清單 (可手動修改內容)</label>
+                        <textarea id="gameList" rows="4" class="w-full border rounded p-2 text-sm outline-none focus:border-indigo-500" placeholder="請勾選類別或手動輸入..."></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">开始时间</label>
+                            <div class="flex gap-1">
+                                <input type="datetime-local" id="startTimePicker" class="flex-1 border rounded p-2 text-xs">
+                                <button onclick="setStartNow()" class="bg-slate-200 text-xs px-2 rounded hover:bg-slate-300 text-slate-600">即刻</button>
+                            </div>
+                            <div class="mt-1 flex items-center"><input type="checkbox" id="startImmediate" class="mr-1" checked> <span class="text-xs text-slate-500">鎖定為「即刻」</span></div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">完成时间</label>
+                            <div class="flex gap-1">
+                                <input type="datetime-local" id="endTimePicker" class="flex-1 border rounded p-2 text-xs">
+                                <button onclick="setEndPending()" class="bg-slate-200 text-xs px-2 rounded hover:bg-slate-300 text-slate-600">待定</button>
+                            </div>
+                            <div class="mt-1 flex items-center"><input type="checkbox" id="endPending" class="mr-1"> <span class="text-xs text-slate-500">鎖定為「待定」</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右側預覽區 -->
+            <div class="lg:col-span-5">
+                <div class="card p-6 border border-indigo-200 bg-white sticky top-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-xs font-bold text-indigo-600 px-2 py-1 bg-indigo-50 rounded">PREVIEW</span>
+                        <button onclick="copyText()" id="copyBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow-lg transition active:scale-95 font-bold">
+                            複製全文
+                        </button>
+                    </div>
+                    <div id="output" class="text-slate-700 whitespace-pre-wrap leading-relaxed text-sm font-mono border-t pt-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const el = id => document.getElementById(id);
+
+        const gameData = {
+            "捕鱼游戏": "捕鱼大亨、捕鱼大咖、渔乐天下、丛林派对",
+            "棋牌对战": "二人麻将、单挑牛牛、21点、抢庄牌九、看三张抢庄牛牛、看四张抢庄牛牛、癞子牛牛、三公、对战二八杠、抢庄牛牛",
+            "棋牌百人": "飞禽走兽、龙虎斗、奔驰宝马、红黑大战、森林舞会、百家乐、百人牛牛、百人骰宝、万人炸金花、万人推筒子",
+            "街机游戏": "经典水果机、美女水果机、澳6水果机、水果机",
+            "老虎机": "游戏项目较多",
+            "真人对战": "掼蛋",
+            "电子彩票": "极速澳门六合彩",
+            "刮刮乐": "五福临门"
+        };
+
+        // 格式化時間
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            const M = String(d.getMonth() + 1).padStart(2, '0');
+            const D = String(d.getDate()).padStart(2, '0');
+            const hh = String(d.getHours()).padStart(2, '0');
+            const mm = String(d.getMinutes()).padStart(2, '0');
+            return `${M}月${D}日 ${hh}:${mm} (GMT+8)`;
+        }
+
+        // 生成公告
+        function generate() {
+            const platform = el('platform').value;
+            const games = el('gameList').value;
+            const type = el('noticeType').value;
+            
+            let startText = el('startImmediate').checked ? '即刻' : formatDate(el('startTimePicker').value);
+            let endText = el('endPending').checked ? '待定' : formatDate(el('endTimePicker').value);
+
+            const formattedGames = games.split(/[，、, \n\t]+/).filter(s => s).map(s => `【${s}】`).join('');
+
+            const template = `尊敬的客户您好，兹通知您 【${platform}】 【单一游戏】${type}
+维护平台： 【${platform}】
+维护游戏： ${formattedGames}
+开始时间：${startText}
+完成时间：${endText}
+ 
+温馨提醒: 
+◎维护期间内，维护产品将无法使用。
+◎维护时间有任何异动，将会另行通知。
+ 
+若有任何问题欢迎随时与我们联系，谢谢您！`;
+
+            el('output').innerText = template;
+        }
+
+        // 當勾選類別按鈕
+        document.querySelectorAll('.cat-checkbox').forEach(cb => {
+            cb.addEventListener('change', () => {
+                const selected = Array.from(document.querySelectorAll('.cat-checkbox:checked')).map(c => c.value);
+                let combined = [];
+                selected.forEach(cat => combined = [...combined, ...gameData[cat].split(/[，、, ]+/)]);
+                el('gameList').value = [...new Set(combined)].join('、');
+                generate();
+            });
+        });
+
+        // 輔助按鈕
+        function setStartNow() { el('startImmediate').checked = true; el('startTimePicker').disabled = true; generate(); }
+        function setEndPending() { el('endPending').checked = true; el('endTimePicker').disabled = true; generate(); }
+
+        // 事件監聽
+        ['platform', 'gameList', 'startTimePicker', 'endTimePicker', 'noticeType'].forEach(id => {
+            el(id).addEventListener('input', generate);
+        });
+
+        el('startImmediate').addEventListener('change', e => { el('startTimePicker').disabled = e.target.checked; generate(); });
+        el('endPending').addEventListener('change', e => { el('endTimePicker').disabled = e.target.checked; generate(); });
+
+        function copyText() {
+            const text = el('output').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = el('copyBtn');
+                btn.innerText = '已成功複製';
+                btn.classList.replace('bg-indigo-600', 'bg-green-600');
+                setTimeout(() => {
+                    btn.innerText = '複製全文';
+                    btn.classList.replace('bg-green-600', 'bg-indigo-600');
+                }, 1500);
+            });
+        }
+
+        // 初始化日期
+        const now = new Date();
+        el('endTimePicker').value = new Date(now.getTime() + 7200000).toISOString().slice(0, 16);
+        el('startTimePicker').disabled = true;
+        generate();
+    </script>
+</body>
+</html>
