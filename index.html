@@ -31,7 +31,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-7 space-y-4">
                 <div class="card p-6 border border-slate-200">
-                    <label class="block text-sm font-bold text-slate-700 mb-3">1. 選擇維護類別 (可多選，點擊按鈕)</label>
+                    <label class="block text-sm font-bold text-slate-700 mb-3">1. 選擇維護/通知類別 (可多選)</label>
                     <div class="flex flex-wrap gap-2 mb-6" id="catGroup">
                         <input type="checkbox" id="c1" class="cat-checkbox" value="捕鱼游戏"><label for="c1" class="cat-label">捕鱼游戏</label>
                         <input type="checkbox" id="c2" class="cat-checkbox" value="棋牌对战"><label for="c2" class="cat-label">棋牌对战</label>
@@ -46,11 +46,12 @@
                         <input type="checkbox" id="c12" class="cat-checkbox" value="SSP電子(所有電子不分類)"><label for="c12" class="cat-label">SSP電子(所有電子不分類)</label>
                         <input type="checkbox" id="c13" class="cat-checkbox" value="SSP捕魚(所有捕魚不分類)"><label for="c13" class="cat-label">SSP捕魚(所有捕魚不分類)</label>
                         <input type="checkbox" id="c14" class="cat-checkbox" value="SSP平台(全平台)"><label for="c14" class="cat-label">SSP平台(全平台)</label>
+                        <input type="checkbox" id="c15" class="cat-checkbox" value="新游戏上线"><label for="c15" class="cat-label bg-orange-50 border-orange-200 text-orange-600">新游戏上线</label>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">维护平台</label>
+                            <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">维护/上线平台</label>
                             <input type="text" id="platform" class="w-full border rounded p-2 text-sm outline-none focus:border-indigo-500" value="SSP平台">
                         </div>
                         <div>
@@ -58,25 +59,26 @@
                             <select id="noticeType" class="w-full border rounded p-2 text-sm outline-none bg-white">
                                 <option value="例行维护通知">例行维护通知</option>
                                 <option value="临时维护通知">临时维护通知</option>
+                                <option value="新游戏上线通知">新游戏上线通知</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">维护游戏清單 (可手動修改內容)</label>
-                        <textarea id="gameList" rows="4" class="w-full border rounded p-2 text-sm outline-none focus:border-indigo-500" placeholder="請勾選類別或手動輸入..."></textarea>
+                        <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">新增/维护游戏清单 (手动输入或点选类别)</label>
+                        <textarea id="gameList" rows="4" class="w-full border rounded p-2 text-sm outline-none focus:border-indigo-500" placeholder="请输入游戏名称..."></textarea>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">开始时间</label>
+                            <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">开始/上线时间</label>
                             <div class="flex gap-1">
                                 <input type="datetime-local" id="startTimePicker" class="flex-1 border rounded p-2 text-xs">
                                 <button onclick="setStartNow()" class="bg-slate-200 text-xs px-2 rounded hover:bg-slate-300 text-slate-600">即刻</button>
                             </div>
                             <div class="mt-1 flex items-center"><input type="checkbox" id="startImmediate" class="mr-1" checked> <span class="text-xs text-slate-500">鎖定為「即刻」</span></div>
                         </div>
-                        <div>
+                        <div id="endTimeArea">
                             <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">完成时间</label>
                             <div class="flex gap-1">
                                 <input type="datetime-local" id="endTimePicker" class="flex-1 border rounded p-2 text-xs">
@@ -118,7 +120,8 @@
             "SSP棋牌(所有棋牌不分類)": "SSP棋牌",
             "SSP電子(所有電子不分類)": "SSP電子",
             "SSP捕魚(所有捕魚不分類)": "SSP捕魚",
-            "SSP平台(全平台)": "SSP平台"
+            "SSP平台(全平台)": "SSP平台",
+            "新游戏上线": "" // 内容手动填写
         };
 
         function formatDate(dateStr) {
@@ -136,18 +139,38 @@
             const games = el('gameList').value;
             const type = el('noticeType').value;
             
-            const isFullPlatform = Array.from(document.querySelectorAll('.cat-checkbox:checked')).some(c => c.value === 'SSP平台(全平台)');
+            const selectedCats = Array.from(document.querySelectorAll('.cat-checkbox:checked')).map(c => c.value);
+            const isFullPlatform = selectedCats.includes('SSP平台(全平台)');
+            const isNewGame = selectedCats.includes('新游戏上线');
 
             let startText = el('startImmediate').checked ? '即刻' : formatDate(el('startTimePicker').value);
             let endText = el('endPending').checked ? '待定' : formatDate(el('endTimePicker').value);
 
-            const formattedGames = games.split(/[，、, \n\t]+/).filter(s => s).map(s => `【${s}】`).join('');
-
-            // 根据是否全平台调整模板
             let template = '';
-            if (isFullPlatform) {
-                // 全平台模式：去掉【单一游戏】，去掉维护游戏行
-                template = `尊敬的客户您好，兹通知您 【${platform}】 ${type}
+
+            if (isNewGame) {
+                // --- 新游戏上线模板 ---
+                // 隐藏完成时间区域（上线通常只需要开始时间）
+                el('endTimeArea').style.opacity = '0.3';
+                const formattedGames = games.split(/[，、, \n\t]+/).filter(s => s).map(s => `《${s}》`).join('');
+                
+                template = `尊敬的客户您好，兹通知您【${platform}】新游戏上线 通知
+
+平台：【${platform}】
+上线时间：${startText}
+新增游戏：${formattedGames}
+
+以上游戏已默认为「开启」，若贵司需要调整设置，可至后台於「游戏管理」→「游戏设置」修改
+
+若有任何问题欢迎随时与我们联系，谢谢您`;
+
+            } else {
+                // --- 维护类模板 ---
+                el('endTimeArea').style.opacity = '1';
+                const formattedGames = games.split(/[，、, \n\t]+/).filter(s => s).map(s => `【${s}】`).join('');
+                
+                if (isFullPlatform) {
+                    template = `尊敬的客户您好，兹通知您 【${platform}】 ${type}
 维护平台： 【${platform}】
 开始时间：${startText}
 完成时间：${endText}
@@ -157,9 +180,8 @@
 ◎维护时间有任何异动，将会另行通知。
  
 若有任何问题欢迎随时与我们联系，谢谢您！`;
-            } else {
-                // 普通模式：保留【单一游戏】和维护游戏行
-                template = `尊敬的客户您好，兹通知您 【${platform}】 【单一游戏】${type}
+                } else {
+                    template = `尊敬的客户您好，兹通知您 【${platform}】 【单一游戏】${type}
 维护平台： 【${platform}】
 维护游戏： ${formattedGames}
 开始时间：${startText}
@@ -170,19 +192,32 @@
 ◎维护时间有任何异动，将会另行通知。
  
 若有任何问题欢迎随时与我们联系，谢谢您！`;
+                }
             }
 
             el('output').innerText = template;
         }
 
+        // 监听复选框变化
         document.querySelectorAll('.cat-checkbox').forEach(cb => {
             cb.addEventListener('change', () => {
                 const selected = Array.from(document.querySelectorAll('.cat-checkbox:checked')).map(c => c.value);
+                
+                // 如果选了新游戏上线，自动切换下拉框类型（可选）
+                if (cb.value === '新游戏上线' && cb.checked) {
+                    el('noticeType').value = '新游戏上线通知';
+                }
+
                 let combined = [];
                 selected.forEach(cat => {
                     if (gameData[cat]) combined = [...combined, ...gameData[cat].split(/[，、, ]+/)];
                 });
-                el('gameList').value = [...new Set(combined)].join('、');
+                
+                // 只有当有自动填充内容时才改变文本框，否则保持手动
+                if (combined.length > 0) {
+                    el('gameList').value = [...new Set(combined)].join('、');
+                }
+                
                 generate();
             });
         });
