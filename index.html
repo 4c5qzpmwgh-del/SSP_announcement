@@ -18,7 +18,9 @@
             background: #4f46e5; border-color: #4f46e5; color: white; 
             box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3);
         }
+        .cat-ssp:checked + .cat-label { background: #0891b2; border-color: #0891b2; }
         input:disabled { background: #f1f5f9; cursor: not-allowed; opacity: 0.6; }
+        .hidden { display: none; }
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -31,7 +33,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-7 space-y-4">
                 <div class="card p-6 border border-slate-200">
-                    <label class="block text-sm font-bold text-slate-700 mb-3">1. 選擇維護/通知類別 (可多選)</label>
+                    <label class="block text-sm font-bold text-slate-700 mb-3">1. 選擇類別 (可多選)</label>
                     <div class="flex flex-wrap gap-2 mb-6" id="catGroup">
                         <input type="checkbox" id="c1" class="cat-checkbox" value="捕鱼游戏"><label for="c1" class="cat-label">捕鱼游戏</label>
                         <input type="checkbox" id="c2" class="cat-checkbox" value="棋牌对战"><label for="c2" class="cat-label">棋牌对战</label>
@@ -42,16 +44,18 @@
                         <input type="checkbox" id="c7" class="cat-checkbox" value="电子彩票"><label for="c7" class="cat-label">电子彩票</label>
                         <input type="checkbox" id="c8" class="cat-checkbox" value="刮刮乐"><label for="c8" class="cat-label">刮刮乐</label>
                         <input type="checkbox" id="c9" class="cat-checkbox" value="特色游戏"><label for="c9" class="cat-label">特色游戏</label>
-                        <input type="checkbox" id="c11" class="cat-checkbox" value="SSP棋牌(所有棋牌不分類)"><label for="c11" class="cat-label">SSP棋牌(所有棋牌不分類)</label>
-                        <input type="checkbox" id="c12" class="cat-checkbox" value="SSP電子(所有電子不分類)"><label for="c12" class="cat-label">SSP電子(所有電子不分類)</label>
-                        <input type="checkbox" id="c13" class="cat-checkbox" value="SSP捕魚(所有捕魚不分類)"><label for="c13" class="cat-label">SSP捕魚(所有捕魚不分類)</label>
+                        <input type="checkbox" id="c11" class="cat-checkbox" value="SSP棋牌(所有棋牌不分類)"><label for="c11" class="cat-label">SSP棋牌</label>
+                        <input type="checkbox" id="c12" class="cat-checkbox" value="SSP電子(所有電子不分類)"><label for="c12" class="cat-label">SSP電子</label>
+                        <input type="checkbox" id="c13" class="cat-checkbox" value="SSP捕魚(所有捕魚不分類)"><label for="c13" class="cat-label">SSP捕魚</label>
                         <input type="checkbox" id="c14" class="cat-checkbox" value="SSP平台(全平台)"><label for="c14" class="cat-label">SSP平台(全平台)</label>
-                        <input type="checkbox" id="c15" class="cat-checkbox" value="新游戏上线"><label for="c15" class="cat-label bg-orange-50 border-orange-200 text-orange-600">新游戏上线</label>
+                        <div class="w-full my-1"></div>
+                        <input type="checkbox" id="c15" class="cat-checkbox" value="新游戏上线(DSG)"><label for="c15" class="cat-label border-orange-200 text-orange-600">新游戏上线(DSG)</label>
+                        <input type="checkbox" id="c16" class="cat-checkbox cat-ssp" value="新游戏上线(SSP)"><label for="c16" class="cat-label border-cyan-200 text-cyan-600">🚀 新游戏上线(SSP)</label>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">维护/上线平台</label>
+                            <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">平台名称</label>
                             <input type="text" id="platform" class="w-full border rounded p-2 text-sm outline-none focus:border-indigo-500" value="SSP平台">
                         </div>
                         <div>
@@ -60,13 +64,32 @@
                                 <option value="例行维护通知">例行维护通知</option>
                                 <option value="临时维护通知">临时维护通知</option>
                                 <option value="新游戏上线通知">新游戏上线通知</option>
+                                <option value="新游戏上架通知">新游戏上架通知</option>
                             </select>
                         </div>
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">新增/维护游戏清单 (手动输入或点选类别)</label>
-                        <textarea id="gameList" rows="4" class="w-full border rounded p-2 text-sm outline-none focus:border-indigo-500" placeholder="请输入游戏名称..."></textarea>
+                    <div id="sspInfoSection" class="hidden p-4 bg-cyan-50 border border-cyan-100 rounded-lg mb-4 space-y-3">
+                        <p class="text-xs font-bold text-cyan-700">【SSP 游戏资讯手动填写】</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-[10px] text-cyan-600 font-bold">名称(简中)</label>
+                                <input type="text" id="nameCN" class="w-full border rounded p-2 text-sm" placeholder="XXXX">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-cyan-600 font-bold">名称(英)</label>
+                                <input type="text" id="nameEN" class="w-full border rounded p-2 text-sm" placeholder="XXXX">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-cyan-600 font-bold">GameID</label>
+                                <input type="text" id="gameID" class="w-full border rounded p-2 text-sm" placeholder="XXXX">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="standardGameListArea" class="mb-4">
+                        <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">维护/上线游戏清单 (可手动修改)</label>
+                        <textarea id="gameList" rows="3" class="w-full border rounded p-2 text-sm outline-none focus:border-indigo-500" placeholder="请输入游戏名称..."></textarea>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -117,11 +140,7 @@
             "电子彩票": "极速澳门六合彩",
             "刮刮乐": "五福临门、好运十倍、快乐8",
             "特色游戏": "修仙渡劫、一飞冲天",
-            "SSP棋牌(所有棋牌不分類)": "SSP棋牌",
-            "SSP電子(所有電子不分類)": "SSP電子",
-            "SSP捕魚(所有捕魚不分類)": "SSP捕魚",
-            "SSP平台(全平台)": "SSP平台",
-            "新游戏上线": "" // 内容手动填写
+            "SSP平台(全平台)": "SSP平台"
         };
 
         function formatDate(dateStr) {
@@ -141,19 +160,42 @@
             
             const selectedCats = Array.from(document.querySelectorAll('.cat-checkbox:checked')).map(c => c.value);
             const isFullPlatform = selectedCats.includes('SSP平台(全平台)');
-            const isNewGame = selectedCats.includes('新游戏上线');
+            const isNewGameStandard = selectedCats.includes('新游戏上线');
+            const isNewGameSSP = selectedCats.includes('新游戏上线(SSP)');
 
             let startText = el('startImmediate').checked ? '即刻' : formatDate(el('startTimePicker').value);
             let endText = el('endPending').checked ? '待定' : formatDate(el('endTimePicker').value);
 
             let template = '';
 
-            if (isNewGame) {
-                // --- 新游戏上线模板 ---
-                // 隐藏完成时间区域（上线通常只需要开始时间）
+            if (isNewGameSSP) {
+                // --- 1. 新游戏上线(SSP) 模板 ---
+                el('sspInfoSection').classList.remove('hidden');
                 el('endTimeArea').style.opacity = '0.3';
+                el('standardGameListArea').style.display = 'none';
+
+                const cn = el('nameCN').value || 'XXXX';
+                const en = el('nameEN').value || 'XXXX';
+                const gid = el('gameID').value || 'XXXX';
+
+                template = `尊敬的客户您好，兹通知您【${platform}】新游戏上架通知
+
+【游戏资讯】
+名稱(簡中) : ${cn}
+名稱(英) : ${en}
+gameid : ${gid}
+图档：如附件
+
+请贵司务必更新，若未更新，将无法进行娱乐，同时请将旧版入口请关闭更换为新版入口。
+若有任何问题欢迎随时与我们联系，谢谢您！`;
+
+            } else if (isNewGameStandard) {
+                // --- 2. 原版 新游戏上线 模板 ---
+                el('sspInfoSection').classList.add('hidden');
+                el('standardGameListArea').style.display = 'block';
+                el('endTimeArea').style.opacity = '0.3';
+
                 const formattedGames = games.split(/[，、, \n\t]+/).filter(s => s).map(s => `《${s}》`).join('');
-                
                 template = `尊敬的客户您好，兹通知您【${platform}】新游戏上线 通知
 
 平台：【${platform}】
@@ -165,8 +207,11 @@
 若有任何问题欢迎随时与我们联系，谢谢您`;
 
             } else {
-                // --- 维护类模板 ---
+                // --- 3. 维护类模板 ---
+                el('sspInfoSection').classList.add('hidden');
+                el('standardGameListArea').style.display = 'block';
                 el('endTimeArea').style.opacity = '1';
+
                 const formattedGames = games.split(/[，、, \n\t]+/).filter(s => s).map(s => `【${s}】`).join('');
                 
                 if (isFullPlatform) {
@@ -198,25 +243,28 @@
             el('output').innerText = template;
         }
 
-        // 监听复选框变化
+        // 监听复选框
         document.querySelectorAll('.cat-checkbox').forEach(cb => {
             cb.addEventListener('change', () => {
-                const selected = Array.from(document.querySelectorAll('.cat-checkbox:checked')).map(c => c.value);
-                
-                // 如果选了新游戏上线，自动切换下拉框类型（可选）
-                if (cb.value === '新游戏上线' && cb.checked) {
-                    el('noticeType').value = '新游戏上线通知';
+                const val = cb.value;
+                if (cb.checked) {
+                    if (val === '新游戏上线(SSP)') {
+                        el('noticeType').value = '新游戏上架通知';
+                        // 取消掉其他的通知勾选，避免干扰
+                        el('c15').checked = false;
+                        el('c14').checked = false;
+                    } else if (val === '新游戏上线') {
+                        el('noticeType').value = '新游戏上线通知';
+                        el('c16').checked = false;
+                    }
                 }
 
+                const selected = Array.from(document.querySelectorAll('.cat-checkbox:checked')).map(c => c.value);
                 let combined = [];
                 selected.forEach(cat => {
                     if (gameData[cat]) combined = [...combined, ...gameData[cat].split(/[，、, ]+/)];
                 });
-                
-                // 只有当有自动填充内容时才改变文本框，否则保持手动
-                if (combined.length > 0) {
-                    el('gameList').value = [...new Set(combined)].join('、');
-                }
+                if (combined.length > 0) el('gameList').value = [...new Set(combined)].join('、');
                 
                 generate();
             });
@@ -225,8 +273,10 @@
         function setStartNow() { el('startImmediate').checked = true; el('startTimePicker').disabled = true; generate(); }
         function setEndPending() { el('endPending').checked = true; el('endTimePicker').disabled = true; generate(); }
 
-        ['platform', 'gameList', 'startTimePicker', 'endTimePicker', 'noticeType'].forEach(id => {
-            el(id).addEventListener('input', generate);
+        // 监听所有输入
+        ['platform', 'gameList', 'startTimePicker', 'endTimePicker', 'noticeType', 'nameCN', 'nameEN', 'gameID'].forEach(id => {
+            const dom = el(id);
+            if(dom) dom.addEventListener('input', generate);
         });
 
         el('startImmediate').addEventListener('change', e => { el('startTimePicker').disabled = e.target.checked; generate(); });
