@@ -8,7 +8,6 @@
     <style>
         body { background-color: #f1f5f9; font-family: sans-serif; }
         .card { background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        /* 隱藏原生 checkbox，用 label 做按鈕樣式 */
         .cat-checkbox { display: none; }
         .cat-label { 
             display: inline-block; padding: 6px 14px; border: 1px solid #e2e8f0; 
@@ -30,25 +29,23 @@
         </h1>
         
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- 左側控制區 -->
             <div class="lg:col-span-7 space-y-4">
                 <div class="card p-6 border border-slate-200">
                     <label class="block text-sm font-bold text-slate-700 mb-3">1. 選擇維護類別 (可多選，點擊按鈕)</label>
-<div class="flex flex-wrap gap-2 mb-6" id="catGroup">
-    <input type="checkbox" id="c1" class="cat-checkbox" value="捕鱼游戏"><label for="c1" class="cat-label">捕鱼游戏</label>
-    <input type="checkbox" id="c2" class="cat-checkbox" value="棋牌对战"><label for="c2" class="cat-label">棋牌对战</label>
-    <input type="checkbox" id="c3" class="cat-checkbox" value="棋牌百人"><label for="c3" class="cat-label">棋牌百人</label>
-    <input type="checkbox" id="c4" class="cat-checkbox" value="街机游戏"><label for="c4" class="cat-label">街机游戏</label>
-    <input type="checkbox" id="c5" class="cat-checkbox" value="老虎机"><label for="c5" class="cat-label">老虎机</label>
-    <input type="checkbox" id="c6" class="cat-checkbox" value="真人对战"><label for="c6" class="cat-label">真人对战</label>
-    <input type="checkbox" id="c7" class="cat-checkbox" value="电子彩票"><label for="c7" class="cat-label">电子彩票</label>
-    <input type="checkbox" id="c8" class="cat-checkbox" value="刮刮乐"><label for="c8" class="cat-label">刮刮乐</label>
-    <input type="checkbox" id="c10" class="cat-checkbox" value="特色游戏"><label for="c9" class="cat-label">特色游戏</label>
-    <input type="checkbox" id="c11" class="cat-checkbox" value="SSP棋牌(所有棋牌不分類)"><label for="c10" class="cat-label">SSP棋牌(所有棋牌不分類)</label>
-    <input type="checkbox" id="c12" class="cat-checkbox" value="SSP電子(所有電子不分類)"><label for="c11" class="cat-label">SSP電子(所有電子不分類)</label>
-    <input type="checkbox" id="c13" class="cat-checkbox" value="SSP捕魚(所有捕魚不分類)"><label for="c12" class="cat-label">SSP捕魚(所有捕魚不分類)</label>
-    <input type="checkbox" id="c14" class="cat-checkbox" value="SSP平台(全平台)"><label for="c13" class="cat-label">SSP平台(全平台)</label>
-</div>
+                    <div class="flex flex-wrap gap-2 mb-6" id="catGroup">
+                        <input type="checkbox" id="c1" class="cat-checkbox" value="捕鱼游戏"><label for="c1" class="cat-label">捕鱼游戏</label>
+                        <input type="checkbox" id="c2" class="cat-checkbox" value="棋牌对战"><label for="c2" class="cat-label">棋牌对战</label>
+                        <input type="checkbox" id="c3" class="cat-checkbox" value="棋牌百人"><label for="c3" class="cat-label">棋牌百人</label>
+                        <input type="checkbox" id="c4" class="cat-checkbox" value="街机游戏"><label for="c4" class="cat-label">街机游戏</label>
+                        <input type="checkbox" id="c5" class="cat-checkbox" value="老虎机"><label for="c5" class="cat-label">老虎机</label>
+                        <input type="checkbox" id="c6" class="cat-checkbox" value="真人对战"><label for="c6" class="cat-label">真人对战</label>
+                        <input type="checkbox" id="c7" class="cat-checkbox" value="电子彩票"><label for="c7" class="cat-label">电子彩票</label>
+                        <input type="checkbox" id="c8" class="cat-checkbox" value="刮刮乐"><label for="c8" class="cat-label">刮刮乐</label>
+                        <input type="checkbox" id="c9" class="cat-checkbox" value="特色游戏"><label for="c9" class="cat-label">特色游戏</label>
+                        <input type="checkbox" id="c11" class="cat-checkbox" value="SSP棋牌(所有棋牌不分類)"><label for="c11" class="cat-label">SSP棋牌(所有棋牌不分類)</label>
+                        <input type="checkbox" id="c12" class="cat-checkbox" value="SSP電子(所有電子不分類)"><label for="c12" class="cat-label">SSP電子(所有電子不分類)</label>
+                        <input type="checkbox" id="c13" class="cat-checkbox" value="SSP捕魚(所有捕魚不分類)"><label for="c13" class="cat-label">SSP捕魚(所有捕魚不分類)</label>
+                        <input type="checkbox" id="c14" class="cat-checkbox" value="SSP平台(全平台)"><label for="c14" class="cat-label">SSP平台(全平台)</label>
                     </div>
 
                     <div class="grid grid-cols-2 gap-4 mb-4">
@@ -91,7 +88,6 @@
                 </div>
             </div>
 
-            <!-- 右側預覽區 -->
             <div class="lg:col-span-5">
                 <div class="card p-6 border border-indigo-200 bg-white sticky top-4">
                     <div class="flex justify-between items-center mb-4">
@@ -109,23 +105,22 @@
     <script>
         const el = id => document.getElementById(id);
 
-const gameData = {
-    "捕鱼游戏": "捕鱼大咖、渔乐天下、丛林派对、捕鱼财神",
-    "棋牌对战": "二人麻将、单挑牛牛、21点、抢庄牌九、看三张抢庄牛牛、看四张抢庄牛牛、癞子牛牛、三公、对战二八杠、抢庄牛牛、通比牛牛",
-    "棋牌百人": "飞禽走兽、龙虎斗、奔驰宝马、红黑大战、森林舞会、百家乐、百人牛牛、百人骰宝、万人炸金花、万人推筒子",
-    "街机游戏": "经典水果机、美女水果机、澳6水果机、水果机",
-    "老虎机": "SSP电子",
-    "真人对战": "掼蛋",
-    "电子彩票": "极速澳门六合彩",
-    "刮刮乐": "五福临门、好运十倍、快乐8",
-    "特色游戏": "一飞冲天","修仙渡劫",
-    "SSP棋牌(所有棋牌不分類)": "SSP棋牌",
-    "SSP電子(所有電子不分類)": "SSP電子",
-    "SSP捕魚(所有捕魚不分類)": "SSP捕魚",
-    "SSP平台(全平台)": "SSP平台"
-};
+        const gameData = {
+            "捕鱼游戏": "捕鱼大咖、渔乐天下、丛林派对、捕鱼财神",
+            "棋牌对战": "二人麻将、单挑牛牛、21点、抢庄牌九、看三张抢庄牛牛、看四张抢庄牛牛、癞子牛牛、三公、对战二八杠、抢庄牛牛、通比牛牛",
+            "棋牌百人": "飞禽走兽、龙虎斗、奔驰宝马、红黑大战、森林舞会、百家乐、百人牛牛、百人骰宝、万人炸金花、万人推筒子",
+            "街机游戏": "经典水果机、美女水果机、澳6水果机、水果机",
+            "老虎机": "SSP电子",
+            "真人对战": "掼蛋",
+            "电子彩票": "极速澳门六合彩",
+            "刮刮乐": "五福临门、好运十倍、快乐8",
+            "特色游戏": "修仙渡劫、一飞冲天",
+            "SSP棋牌(所有棋牌不分類)": "SSP棋牌",
+            "SSP電子(所有電子不分類)": "SSP電子",
+            "SSP捕魚(所有捕魚不分類)": "SSP捕魚",
+            "SSP平台(全平台)": "SSP平台"
+        };
 
-        // 格式化時間
         function formatDate(dateStr) {
             if (!dateStr) return '';
             const d = new Date(dateStr);
@@ -136,18 +131,35 @@ const gameData = {
             return `${M}月${D}日 ${hh}:${mm} (GMT+8)`;
         }
 
-        // 生成公告
         function generate() {
             const platform = el('platform').value;
             const games = el('gameList').value;
             const type = el('noticeType').value;
             
+            const isFullPlatform = Array.from(document.querySelectorAll('.cat-checkbox:checked')).some(c => c.value === 'SSP平台(全平台)');
+
             let startText = el('startImmediate').checked ? '即刻' : formatDate(el('startTimePicker').value);
             let endText = el('endPending').checked ? '待定' : formatDate(el('endTimePicker').value);
 
             const formattedGames = games.split(/[，、, \n\t]+/).filter(s => s).map(s => `【${s}】`).join('');
 
-            const template = `尊敬的客户您好，兹通知您 【${platform}】 【单一游戏】${type}
+            // 根据是否全平台调整模板
+            let template = '';
+            if (isFullPlatform) {
+                // 全平台模式：去掉【单一游戏】，去掉维护游戏行
+                template = `尊敬的客户您好，兹通知您 【${platform}】 ${type}
+维护平台： 【${platform}】
+开始时间：${startText}
+完成时间：${endText}
+ 
+温馨提醒: 
+◎维护期间内，维护产品将无法使用。
+◎维护时间有任何异动，将会另行通知。
+ 
+若有任何问题欢迎随时与我们联系，谢谢您！`;
+            } else {
+                // 普通模式：保留【单一游戏】和维护游戏行
+                template = `尊敬的客户您好，兹通知您 【${platform}】 【单一游戏】${type}
 维护平台： 【${platform}】
 维护游戏： ${formattedGames}
 开始时间：${startText}
@@ -158,26 +170,26 @@ const gameData = {
 ◎维护时间有任何异动，将会另行通知。
  
 若有任何问题欢迎随时与我们联系，谢谢您！`;
+            }
 
             el('output').innerText = template;
         }
 
-        // 當勾選類別按鈕
         document.querySelectorAll('.cat-checkbox').forEach(cb => {
             cb.addEventListener('change', () => {
                 const selected = Array.from(document.querySelectorAll('.cat-checkbox:checked')).map(c => c.value);
                 let combined = [];
-                selected.forEach(cat => combined = [...combined, ...gameData[cat].split(/[，、, ]+/)]);
+                selected.forEach(cat => {
+                    if (gameData[cat]) combined = [...combined, ...gameData[cat].split(/[，、, ]+/)];
+                });
                 el('gameList').value = [...new Set(combined)].join('、');
                 generate();
             });
         });
 
-        // 輔助按鈕
         function setStartNow() { el('startImmediate').checked = true; el('startTimePicker').disabled = true; generate(); }
         function setEndPending() { el('endPending').checked = true; el('endTimePicker').disabled = true; generate(); }
 
-        // 事件監聽
         ['platform', 'gameList', 'startTimePicker', 'endTimePicker', 'noticeType'].forEach(id => {
             el(id).addEventListener('input', generate);
         });
@@ -198,7 +210,6 @@ const gameData = {
             });
         }
 
-        // 初始化日期
         const now = new Date();
         el('endTimePicker').value = new Date(now.getTime() + 7200000).toISOString().slice(0, 16);
         el('startTimePicker').disabled = true;
