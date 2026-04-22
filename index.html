@@ -69,6 +69,14 @@
                         </div>
                     </div>
 
+                    <div id="dsgInfoSection" class="hidden p-4 bg-orange-50 border border-orange-100 rounded-lg mb-4">
+                        <p class="text-xs font-bold text-orange-700 mb-2">【DSG 游戏资讯手动填写】</p>
+                        <div>
+                            <label class="block text-[10px] text-orange-600 font-bold uppercase">新增游戏名称</label>
+                            <input type="text" id="dsgName" class="w-full border rounded p-2 text-sm" placeholder="请输入游戏名称 (例如: 财神到)">
+                        </div>
+                    </div>
+
                     <div id="sspInfoSection" class="hidden p-4 bg-cyan-50 border border-cyan-100 rounded-lg mb-4 space-y-3">
                         <p class="text-xs font-bold text-cyan-700">【SSP 游戏资讯手动填写】</p>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -163,13 +171,19 @@
             
             const selectedCats = Array.from(document.querySelectorAll('.cat-checkbox:checked')).map(c => c.value);
             const isFullPlatform = selectedCats.includes('SSP平台(全平台)');
-            const isNewGameStandard = selectedCats.includes('新游戏上线');
+            const isNewGameDSG = selectedCats.includes('新游戏上线(DSG)');
             const isNewGameSSP = selectedCats.includes('新游戏上线(SSP)');
 
             let startText = el('startImmediate').checked ? '即刻' : formatDate(el('startTimePicker').value);
             let endText = el('endPending').checked ? '待定' : formatDate(el('endTimePicker').value);
 
             let template = '';
+
+            // 初始隐藏所有特殊区块
+            el('dsgInfoSection').classList.add('hidden');
+            el('sspInfoSection').classList.add('hidden');
+            el('standardGameListArea').style.display = 'block';
+            el('endTimeArea').style.opacity = '1';
 
             if (isNewGameSSP) {
                 // --- 1. 新游戏上线(SSP) 模板 ---
@@ -192,33 +206,31 @@ gameid : ${gid}
 请贵司务必更新，若未更新，将无法进行娱乐，同时请将旧版入口请关闭更换为新版入口。
 若有任何问题欢迎随时与我们联系，谢谢您！`;
 
-            } else if (isNewGameStandard) {
-                // --- 2. 原版 新游戏上线 模板 ---
-                el('sspInfoSection').classList.add('hidden');
-                el('standardGameListArea').style.display = 'block';
+            } else if (isNewGameDSG) {
+                // --- 2. 新游戏上线(DSG) 模板 (修改版) ---
+                el('dsgInfoSection').classList.remove('hidden');
                 el('endTimeArea').style.opacity = '0.3';
+                el('standardGameListArea').style.display = 'none'; // 隐藏通用列表框
 
-                const formattedGames = games.split(/[，、, \n\t]+/).filter(s => s).map(s => `《${s}》`).join('');
+                const dsgName = el('dsgName').value || 'XXXX';
+
                 template = `尊敬的客户您好，兹通知您【${platform}】新游戏上线 通知
 
 平台：【${platform}】
-上线时间：${startText}
-新增游戏：${formattedGames}
+上线时间：即刻
+新增游戏：《${dsgName}》
 
 以上游戏已默认为「开启」，若贵司需要调整设置，可至后台於「游戏管理」→「游戏设置」修改
 
 若有任何问题欢迎随时与我们联系，谢谢您`;
 
             } else {
-                // --- 3. 维护类模板 ---
-                el('sspInfoSection').classList.add('hidden');
-                el('standardGameListArea').style.display = 'block';
-                el('endTimeArea').style.opacity = '1';
-
+                // --- 3. 维护类或通用模板 ---
                 const formattedGames = games.split(/[，、, \n\t]+/).filter(s => s).map(s => `【${s}】`).join('');
                 
                 if (isFullPlatform) {
                     template = `尊敬的客户您好，兹通知您 【${platform}】 ${type}
+
 维护平台： 【${platform}】
 开始时间：${startText}
 完成时间：${endText}
@@ -253,12 +265,12 @@ gameid : ${gid}
                 if (cb.checked) {
                     if (val === '新游戏上线(SSP)') {
                         el('noticeType').value = '新游戏上架通知';
-                        // 取消掉其他的通知勾选，避免干扰
-                        el('c15').checked = false;
+                        el('c15').checked = false; // 互斥
                         el('c14').checked = false;
-                    } else if (val === '新游戏上线') {
+                    } else if (val === '新游戏上线(DSG)') {
                         el('noticeType').value = '新游戏上线通知';
-                        el('c16').checked = false;
+                        el('c16').checked = false; // 互斥
+                        el('startImmediate').checked = true; // DSG 模板固定为即刻
                     }
                 }
 
@@ -277,7 +289,7 @@ gameid : ${gid}
         function setEndPending() { el('endPending').checked = true; el('endTimePicker').disabled = true; generate(); }
 
         // 监听所有输入
-        ['platform', 'gameList', 'startTimePicker', 'endTimePicker', 'noticeType', 'nameCN', 'nameEN', 'gameID'].forEach(id => {
+        ['platform', 'gameList', 'startTimePicker', 'endTimePicker', 'noticeType', 'nameCN', 'nameEN', 'gameID', 'dsgName'].forEach(id => {
             const dom = el(id);
             if(dom) dom.addEventListener('input', generate);
         });
