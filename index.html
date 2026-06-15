@@ -137,12 +137,11 @@
 
     <script>
         const el = id => document.getElementById(id);
-
         const gameData = {
             "捕鱼游戏": "捕鱼大亨、捕鱼大咖、渔乐天下、丛林派对",
             "棋牌对战": "二人麻将、单挑牛牛、21点、抢庄牌九、看三张抢庄牛牛、看四张抢庄牛牛、癞子牛牛、三公、对战二八杠、抢庄牛牛",
             "棋牌百人": "飞禽走兽、龙虎斗、奔驰宝马、红黑大战、森林舞会、百家乐、百人牛牛、百人骰宝、万人炸金花、万人推筒子",
-            "棋牌街机": "经典水果机、美女水果机、澳6水果机、水果机",
+            "街机游戏": "经典水果机、美女水果机、澳6水果机、水果机",
             "老虎机": "SSP电子",
             "真人对战": "掼蛋",
             "电子彩票": "极速澳门六合彩",
@@ -153,7 +152,7 @@
             "SSP捕魚(所有捕魚不分類)": "SSP捕魚",
             "SSP平台(全平台)": "SSP平台"
         };
-
+        
         function formatDate(dateStr) {
             if (!dateStr) return '';
             const d = new Date(dateStr);
@@ -178,7 +177,6 @@
             let endText = el('endPending').checked ? '待定' : formatDate(el('endTimePicker').value);
 
             let template = '';
-
             // 初始隐藏所有特殊区块
             el('dsgInfoSection').classList.add('hidden');
             el('sspInfoSection').classList.add('hidden');
@@ -205,7 +203,6 @@ gameid : ${gid}
 
 请贵司务必更新，若未更新，将无法进行娱乐，同时请将旧版入口请关闭更换为新版入口。
 若有任何问题欢迎随时与我们联系，谢谢您！`;
-
             } else if (isNewGameDSG) {
                 // --- 2. 新游戏上线(DSG) 模板 (修改版) ---
                 el('dsgInfoSection').classList.remove('hidden');
@@ -227,18 +224,17 @@ gameid : ${gid}
             } else {
                 // --- 3. 维护类或通用模板 ---
                 const formattedGames = games.split(/[，、, \n\t]+/).filter(s => s).map(s => `【${s}】`).join('');
-                
                 if (isFullPlatform) {
                     template = `尊敬的客户您好，兹通知您 【${platform}】 ${type}
 
 维护平台： 【${platform}】
 开始时间：${startText}
 完成时间：${endText}
- 
-温馨提醒: 
+ 
+温馨提醒: 
 ◎维护期间内，维护产品将无法使用。
 ◎维护时间有任何异动，将会另行通知。
- 
+ 
 若有任何问题欢迎随时与我们联系，谢谢您！`;
                 } else {
                     template = `尊敬的客户您好，兹通知您 【${platform}】 【单一游戏】${type}
@@ -246,11 +242,11 @@ gameid : ${gid}
 维护游戏： ${formattedGames}
 开始时间：${startText}
 完成时间：${endText}
- 
-温馨提醒: 
+ 
+温馨提醒: 
 ◎维护期间内，维护产品将无法使用。
 ◎维护时间有任何异动，将会另行通知。
- 
+ 
 若有任何问题欢迎随时与我们联系，谢谢您！`;
                 }
             }
@@ -280,11 +276,12 @@ gameid : ${gid}
                     if (gameData[cat]) combined = [...combined, ...gameData[cat].split(/[，、, ]+/)];
                 });
                 if (combined.length > 0) el('gameList').value = [...new Set(combined)].join('、');
+                else el('gameList').value = ''; // 如果全取消，清空列表
                 
                 generate();
             });
         });
-
+        
         function setStartNow() { el('startImmediate').checked = true; el('startTimePicker').disabled = true; generate(); }
         function setEndPending() { el('endPending').checked = true; el('endTimePicker').disabled = true; generate(); }
 
@@ -293,10 +290,10 @@ gameid : ${gid}
             const dom = el(id);
             if(dom) dom.addEventListener('input', generate);
         });
-
+        
         el('startImmediate').addEventListener('change', e => { el('startTimePicker').disabled = e.target.checked; generate(); });
         el('endPending').addEventListener('change', e => { el('endTimePicker').disabled = e.target.checked; generate(); });
-
+        
         function copyText() {
             const text = el('output').innerText;
             navigator.clipboard.writeText(text).then(() => {
