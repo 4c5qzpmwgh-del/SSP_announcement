@@ -64,8 +64,15 @@
                         </div>
                     </div>
 
-                    <!-- 模式快捷切換 (三個按鈕全都在) -->
-                    <div class="flex flex-wrap gap-2 pt-2 border-t border-slate-100">
+                    <!-- 警告提示標語 (紅字加粗) -->
+                    <div class="p-3 bg-red-50 border border-red-200 rounded-xl flex items-center gap-2">
+                        <span class="text-red-600 font-extrabold text-sm tracking-wide">
+                            ⚠️ SSP全平台维护时，DSG请同步发送PG维护！！！！
+                        </span>
+                    </div>
+
+                    <!-- 模式快捷切換 -->
+                    <div class="flex flex-wrap gap-2 pt-1 border-t border-slate-100">
                         <button type="button" id="btnModeDsg" onclick="selectMode('dsg')" class="mode-btn text-orange-600 bg-orange-50 border-orange-200">
                             新游戏上线(DSG)
                         </button>
@@ -194,17 +201,15 @@
             "SSP平台": "SSP平台"
         };
 
-        let currentMode = 'maint'; // 預設為 維護模式
+        let currentMode = 'maint';
 
         function selectMode(mode) {
             currentMode = mode;
             
-            // 按鈕外觀切換
             el('btnModeDsg').className = mode === 'dsg' ? 'mode-btn active-dsg' : 'mode-btn text-orange-600 bg-orange-50 border-orange-200';
             el('btnModeSsp').className = mode === 'ssp' ? 'mode-btn active-ssp flex items-center gap-1' : 'mode-btn text-cyan-700 bg-cyan-50 border-cyan-200 flex items-center gap-1';
             el('btnModeMaint').className = mode === 'maint' ? 'mode-btn active-maint flex items-center gap-1' : 'mode-btn text-slate-600 bg-slate-50 border-slate-200 flex items-center gap-1';
 
-            // 區塊顯隱控制
             if (mode === 'dsg') {
                 el('dsgGameSection').classList.remove('hidden');
                 el('newGameSection').classList.add('hidden');
@@ -280,7 +285,6 @@ ${catLine}图标：如附件
 若有任何问题欢迎随时与我们联系，谢谢您！`;
 
             } else {
-                // 維護公告格式
                 const games = el('gameList').value;
                 const formattedGames = games.split(/[，、, \n\t]+/).filter(s => s).map(s => `【${s}】`).join('');
 
@@ -306,7 +310,6 @@ ${catLine}图标：如附件
                 const checkedBoxes = Array.from(document.querySelectorAll('.cat-checkbox:checked'));
                 const selected = checkedBoxes.map(c => c.value);
                 
-                // 維護清單合併
                 let combined = [];
                 selected.forEach(cat => {
                     if (gameData[cat]) {
@@ -316,12 +319,10 @@ ${catLine}图标：如附件
                 const uniqueGames = [...new Set(combined)];
                 el('gameList').value = uniqueGames.join('、');
 
-                // DSG 模式下帶入新增遊戲
                 if (currentMode === 'dsg' && uniqueGames.length > 0) {
                     el('dsgGameName').value = uniqueGames.join('、');
                 }
 
-                // SSP 模式下帶入遊戲類型
                 if (selected.length > 0) {
                     const cleanNames = selected.map(cleanCategoryName).filter(s => s);
                     el('gameCategoryText').value = cleanNames.join('、');
@@ -336,7 +337,6 @@ ${catLine}图标：如附件
         function setStartNow() { el('startImmediate').checked = true; el('startTimePicker').disabled = true; generate(); }
         function setEndPending() { el('endPending').checked = true; el('endTimePicker').disabled = true; generate(); }
 
-        // 監聽所有輸入
         ['platform', 'noticeType', 'dsgGameName', 'gameCn', 'gameEn', 'gameId', 'gameCategoryText', 'gameList', 'startTimePicker', 'endTimePicker'].forEach(id => {
             el(id).addEventListener('input', generate);
         });
@@ -368,12 +368,10 @@ ${catLine}图标：如附件
             });
         }
 
-        // 初始化時間與模式
         const now = new Date();
         el('startTimePicker').value = now.toISOString().slice(0, 16);
         el('endTimePicker').value = new Date(now.getTime() + 7200000).toISOString().slice(0, 16);
 
-        // 預設進入維護模式
         selectMode('maint');
     </script>
 </body>
